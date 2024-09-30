@@ -63,6 +63,16 @@ julian_date_fractional = julian_midnight + date_fractional
 t_ut1 = (julian_date_fractional - 2451545.0) / 36525
 
 gmst_angle = 67310.54841 + (876600 * 60 * 60 + 8640184.812866)*t_ut1 + 0.093104*t_ut1**2 - 6.2e-6*t_ut1**3
-gmst_angle_radians = math.radians((gmst_angle / 240)) % (2*math.pi)
+gmst_angle_radians = (gmst_angle*2*math.pi / 86400) % math.pi
 
-print(gmst_angle_radians)
+Rz = [[math.cos(-gmst_angle_radians), -math.sin(-gmst_angle_radians), 0], 
+      [math.sin(-gmst_angle_radians), math.cos(-gmst_angle_radians), 0], 
+      [0, 0, 1]]
+
+eci = [[eci_x_km], [eci_y_km], [eci_z_km]]
+
+ecef = np.dot(Rz, eci)
+
+print(ecef[0][0])
+print(ecef[1][0])
+print(ecef[2][0])
